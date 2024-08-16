@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floating Text Animation</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -24,44 +26,53 @@
             max-width: 300px;
             box-sizing: border-box;
             position: absolute;
-            top: 10px;
+            bottom: 10px; /* 인풋박스를 화면 최하단으로 내림 */
             left: 50%;
             transform: translateX(-50%);
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        #userInput::placeholder {
+            color: #999;
+            font-family: 'Noto Sans KR', sans-serif;
         }
         .floating-text {
             position: absolute;
-            font-size: 24px;
+            font-size: 2vw; /* 텍스트 크기를 뷰포트 너비에 따라 반응형으로 설정 */
             color: #333;
             animation: float 5s ease-in-out infinite;
             white-space: nowrap;
+            font-family: 'Noto Sans KR', sans-serif;
         }
         @keyframes float {
             0%, 100% {
-                transform: translateY(-10px);
+                transform: translateY(-10%);
             }
             50% {
-                transform: translateY(10px);
+                transform: translateY(10%);
             }
         }
     </style>
 </head>
 <body>
-    <input type="text" id="userInput" placeholder="Type something and press Enter...">
+    <input type="text" id="userInput" placeholder="입력해보세요!">
 
     <script>
+        let cols, rows, grid, gridSize;
         const userInput = document.getElementById('userInput');
-        const grid = [];
-        const gridSize = 30;  // 그리드 셀 크기를 줄여 더 밀집되도록 함
-        const cols = Math.floor(window.innerWidth / gridSize);
-        const rows = Math.floor(window.innerHeight / gridSize);
+        
+        function initializeGrid() {
+            gridSize = Math.max(window.innerWidth, window.innerHeight) / 50; // 그리드 셀 크기를 화면 크기에 따라 조정
+            cols = Math.floor(window.innerWidth / gridSize);
+            rows = Math.floor(window.innerHeight / gridSize);
 
-        // 중앙 범위 계산 (중앙에 더 가깝게 배치)
-        const centralCols = Math.floor(cols * 0.4); // 전체 가로 셀의 40% 범위만 사용
-        const centralRows = Math.floor(rows * 0.4); // 전체 세로 셀의 40% 범위만 사용
+            // 중앙 범위 계산 (중앙에 더 가깝게 배치)
+            centralCols = Math.floor(cols * 0.4); // 전체 가로 셀의 40% 범위만 사용
+            centralRows = Math.floor(rows * 0.4); // 전체 세로 셀의 40% 범위만 사용
 
-        // 그리드 초기화
-        for (let i = 0; i < cols; i++) {
-            grid[i] = new Array(rows).fill(false);
+            grid = [];
+            for (let i = 0; i < cols; i++) {
+                grid[i] = new Array(rows).fill(false);
+            }
         }
 
         userInput.addEventListener('keypress', function(event) {
@@ -109,6 +120,12 @@
 
             return { left, top, col, row };
         }
+
+        // 창 크기 변경 시 그리드 재설정
+        window.addEventListener('resize', initializeGrid);
+
+        // 초기 그리드 설정
+        initializeGrid();
     </script>
 </body>
 </html>

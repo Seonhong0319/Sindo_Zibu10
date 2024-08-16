@@ -7,42 +7,57 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
+        * {
+            box-sizing: border-box; /* 모든 요소의 박스 크기 계산을 통일 */
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            height: 100vh;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* 스크롤이 생기지 않도록 설정 */
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f0f0f0;
             position: relative;
         }
+
         #userInput {
-            font-size: 20px;
+            font-size: 13pt; /* 입력 텍스트 크기 고정 */
             padding: 10px;
             width: 80%;
             max-width: 300px;
-            box-sizing: border-box;
             position: absolute;
-            bottom: 10px; /* 인풋박스를 화면 최하단으로 내림 */
+            bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold; /* 텍스트 볼드 처리 */
+            letter-spacing: 0.05em; /* 자간 0.05em 적용 */
         }
+
         #userInput::placeholder {
             color: #999;
             font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold; /* 플레이스홀더 텍스트 볼드 처리 */
+            letter-spacing: 0.05em; /* 자간 0.05em 적용 */
         }
+
         .floating-text {
             position: absolute;
-            font-size: 2vw; /* 텍스트 크기를 뷰포트 너비에 따라 반응형으로 설정 */
+            font-size: 13pt; /* 텍스트 크기 고정 */
             color: #333;
             animation: float 5s ease-in-out infinite;
             white-space: nowrap;
             font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold; /* 텍스트 볼드 처리 */
+            letter-spacing: 0.05em; /* 자간 0.05em 적용 */
+            will-change: transform; /* 성능 최적화를 위해 애니메이션 요소에 will-change 추가 */
         }
+
         @keyframes float {
             0%, 100% {
                 transform: translateY(-10%);
@@ -61,13 +76,12 @@
         const userInput = document.getElementById('userInput');
         
         function initializeGrid() {
-            gridSize = Math.max(window.innerWidth, window.innerHeight) / 50; // 그리드 셀 크기를 화면 크기에 따라 조정
+            gridSize = Math.max(window.innerWidth, window.innerHeight) / 50;
             cols = Math.floor(window.innerWidth / gridSize);
             rows = Math.floor(window.innerHeight / gridSize);
 
-            // 중앙 범위 계산 (중앙에 더 가깝게 배치)
-            centralCols = Math.floor(cols * 0.4); // 전체 가로 셀의 40% 범위만 사용
-            centralRows = Math.floor(rows * 0.4); // 전체 세로 셀의 40% 범위만 사용
+            const centralCols = Math.floor(cols * 0.4);
+            const centralRows = Math.floor(rows * 0.4);
 
             grid = [];
             for (let i = 0; i < cols; i++) {
@@ -78,11 +92,7 @@
         userInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                
-                // 텍스트를 화면에 추가
                 addFloatingText(userInput.value);
-                
-                // 입력 필드 초기화
                 userInput.value = '';
             }
         });
@@ -97,23 +107,20 @@
             floatingText.style.top = position.top + 'px';
 
             document.body.appendChild(floatingText);
-
-            // 그리드 점유 표시
             grid[position.col][position.row] = true;
 
-            // 애니메이션이 끝난 후 텍스트 제거
             floatingText.addEventListener('animationend', () => {
                 floatingText.remove();
-                grid[position.col][position.row] = false;  // 그리드 해제
+                grid[position.col][position.row] = false;
             });
         }
 
         function getGridPosition() {
             let col, row;
             do {
-                col = Math.floor(cols * 0.3 + Math.random() * centralCols);
-                row = Math.floor(rows * 0.3 + Math.random() * centralRows);
-            } while (grid[col][row]);  // 빈 그리드 셀 찾기
+                col = Math.floor(cols * 0.3 + Math.random() * (cols * 0.4));
+                row = Math.floor(rows * 0.3 + Math.random() * (rows * 0.4));
+            } while (grid[col][row]);
 
             const left = col * gridSize;
             const top = row * gridSize;
@@ -121,10 +128,8 @@
             return { left, top, col, row };
         }
 
-        // 창 크기 변경 시 그리드 재설정
         window.addEventListener('resize', initializeGrid);
 
-        // 초기 그리드 설정
         initializeGrid();
     </script>
 </body>

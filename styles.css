@@ -11,18 +11,33 @@ html, body {
     height: 100%;
     overflow: hidden; /* 스크롤이 생기지 않도록 설정 */
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: #f0f0f0;
+    background-color: #E7E6E6;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
 }
 
+.glass-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background: rgba(255, 255, 255, 0.3); /* 흰색이 약간 가미된 반투명 배경 */
+    border-radius: 100px; /* 라운드 스퀘어 모양 */
+    backdrop-filter: blur(20px); /* 블러 효과 */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* 약간의 테두리 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+    z-index: -1; /* 인풋박스보다 뒤로 보내기 */
+}
+
 #userInput {
     font-size: 11pt; /* 입력 텍스트 크기 고정 */
-    padding: 10px;
+    padding: 10px 10px 10px 15px; /* 좌측 마진을 포함한 패딩 설정 */
     width: 80%;
-    max-width: 300px;
+    max-width: 1200px;
     position: absolute;
     bottom: 10px;
     left: 50%;
@@ -30,6 +45,15 @@ html, body {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: bold; /* 텍스트 볼드 처리 */
     letter-spacing: 0.05em; /* 자간 0.05em 적용 */
+    margin-bottom: 10px;
+    
+    /* 글래스모피즘 스타일 적용 */
+    background: rgba(255, 255, 255, 0.2); /* 반투명 흰색 배경 */
+    border-radius: 100px; /* 라운드 스퀘어 모양 */
+    backdrop-filter: blur(40px); /* 블러 효과 */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* 약간의 테두리 */
+    color: #000; /* 텍스트 색상 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* 약간의 그림자 */
 }
 
 #userInput::placeholder {
@@ -37,18 +61,50 @@ html, body {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: bold; /* 플레이스홀더 텍스트 볼드 처리 */
     letter-spacing: 0.05em; /* 자간 0.05em 적용 */
+    padding-left: 5px; /* 플레이스홀더 좌측 마진 추가 */
 }
 
 .floating-text {
     position: absolute;
     font-size: 11pt; /* 텍스트 크기 고정 */
     color: #333;
+    background: rgba(255, 255, 255, 0.9); /* 반투명 흰색 배경 추가 */
+    border-radius: 100px; /* 약간 둥근 모서리 */
+    padding: 11px 15px; /* 텍스트 주변에 패딩 추가 */
     animation: float 5s ease-in-out infinite;
-    white-space: nowrap;
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: bold; /* 텍스트 볼드 처리 */
-    letter-spacing: 0.05em; /* 자간 0.05em 적용 */
+    letter-spacing: 0.025em; /* 자간 0.025em 적용 */
     will-change: transform; /* 성능 최적화를 위해 애니메이션 요소에 will-change 추가 */
+    margin: 15px; /* 상하좌우 마진 추가 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+
+    /* 텍스트 줄바꿈 및 최대 너비 설정 */
+    white-space: normal; /* 텍스트 줄바꿈 허용 */
+    max-width: 80vw; /* 텍스트가 화면 너비의 80%를 넘지 않도록 제한 */
+    word-wrap: break-word; /* 단어가 너무 길면 자동으로 줄바꿈 */
+    overflow-wrap: break-word; /* 긴 단어를 줄바꿈 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+/* 토스트 팝업 스타일 */
+.toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    opacity: 0.9;
+    z-index: 1000;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.toast.fade {
+    opacity: 0;
 }
 
 @keyframes float {

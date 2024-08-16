@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Text Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            position: relative;
+        }
+        #userInput {
+            font-size: 20px;
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .floating-text {
+            position: absolute;
+            font-size: 24px;
+            color: #333;
+            animation: float 5s ease-in-out infinite;
+            white-space: nowrap;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(-10px);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="userInput" placeholder="Type something and press Enter...">
+
+    <script>
+        const userInput = document.getElementById('userInput');
+        const grid = [];
+        const gridSize = 30;  // 그리드 셀 크기를 줄여 더 밀집되도록 함
+        const cols = Math.floor(window.innerWidth / gridSize);
+        const rows = Math.floor(window.innerHeight / gridSize);
+
+        // 중앙 범위 계산 (중앙에 더 가깝게 배치)
+        const centralCols = Math.floor(cols * 0.4); // 전체 가로 셀의 40% 범위만 사용
+        const centralRows = Math.floor(rows * 0.4); // 전체 세로 셀의 40% 범위만 사용
+
+        // 그리드 초기화
+        for (let i = 0; i < cols; i++) {
+            grid[i] = new Array(rows).fill(false);
+        }
+
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                
+                // 텍스트를 화면에 추가
+                addFloatingText(userInput.value);
+                
+                // 입력 필드 초기화
+                userInput.value = '';
+            }
+        });
+
+        function addFloatingText(text) {
+            const floatingText = document.createElement('div');
+            floatingText.className = 'floating-text';
+            floatingText.textContent = text;
+
+            const position = getGridPosition();
+            floatingText.style.left = position.left + 'px';
+            floatingText.style.top = position.top + 'px';
+
+            document.body.appendChild(floatingText);
+
+            // 그리드 점유 표시
+            grid[position.col][position.row] = true;
+
+            // 애니메이션이 끝난 후 텍스트 제거
+            floatingText.addEventListener('animationend', () => {
+                floatingText.remove();
+                grid[position.col][position.row] = false;  // 그리드 해제
+            });
+        }
+
+        function getGridPosition() {
+            let col, row;
+            do {
+                col = Math.floor(cols * 0.3 + Math.random() * centralCols);
+                row = Math.floor(rows * 0.3 + Math.random() * centralRows);
+            } while (grid[col][row]);  // 빈 그리드 셀 찾기
+
+            const left = col * gridSize;
+            const top = row * gridSize;
+
+            return { left, top, col, row };
+        }
+    </script>
+</body>
+</html>
